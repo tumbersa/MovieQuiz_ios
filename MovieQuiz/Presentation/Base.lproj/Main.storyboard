@@ -46,10 +46,10 @@
                                         </subviews>
                                     </stackView>
                                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="hKd-FB-6a2" userLabel="Preview Image">
-                                        <rect key="frame" x="0.0" y="38.5" width="374" height="561"/>
+                                        <rect key="frame" x="0.0" y="38.5" width="374" height="556"/>
                                         <color key="backgroundColor" name="YP White"/>
                                         <constraints>
-                                            <constraint firstAttribute="width" secondItem="hKd-FB-6a2" secondAttribute="height" multiplier="2:3" id="bAc-X1-YdG"/>
+                                            <constraint firstAttribute="width" relation="greaterThanOrEqual" secondItem="hKd-FB-6a2" secondAttribute="height" multiplier="2:3" id="mEN-dc-WkD"/>
                                         </constraints>
                                         <userDefinedRuntimeAttributes>
                                             <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
@@ -58,7 +58,7 @@
                                         </userDefinedRuntimeAttributes>
                                     </imageView>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Рейтинг этого фильма меньше, чем 5?" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="50c-yC-Pos" userLabel="Question Label">
-                                        <rect key="frame" x="0.0" y="598" width="374" height="150"/>
+                                        <rect key="frame" x="0.0" y="593" width="374" height="155"/>
                                         <fontDescription key="fontDescription" name="YSDisplay-Bold" family="YS Display" pointSize="23"/>
                                         <color key="textColor" name="YP White"/>
                                         <nil key="highlightedColor"/>
@@ -120,12 +120,14 @@
                     <connections>
                         <outlet property="counterLabel" destination="6jX-2d-2yo" id="9zI-Bh-iSU"/>
                         <outlet property="imageView" destination="hKd-FB-6a2" id="a6h-k6-65b"/>
+                        <outlet property="noButton" destination="av1-kr-H2y" id="EGa-gF-T2U"/>
                         <outlet property="textLabel" destination="50c-yC-Pos" id="Mig-Gs-obc"/>
+                        <outlet property="yesButton" destination="swk-V1-eUy" id="gOi-Gw-thA"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-56.521739130434788" y="54.910714285714285"/>
+            <point key="canvasLocation" x="-56.521739130434788" y="54.619565217391312"/>
         </scene>
     </scenes>
     <resources>

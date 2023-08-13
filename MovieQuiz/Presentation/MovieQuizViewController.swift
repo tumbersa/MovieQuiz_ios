@@ -125,7 +125,8 @@ final class MovieQuizViewController: UIViewController {
         imageView.layer.borderWidth = 8
         imageView.layer.borderColor = isCorrect ?
         UIColor.ypGreen.cgColor : UIColor.ypRed.cgColor
-        
+        yesButton.isEnabled = false
+        noButton.isEnabled = false
         // запускаем задачу через 1 секунду c помощью диспетчера задач
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
            // код, который мы хотим вызвать через 1 секунду
@@ -152,6 +153,8 @@ final class MovieQuizViewController: UIViewController {
 
             show(quiz: viewModel)
         }
+        yesButton.isEnabled = true
+        noButton.isEnabled = true
     }
     
     //картинка постера фильма
@@ -161,7 +164,10 @@ final class MovieQuizViewController: UIViewController {
     //текст вопроса
     @IBOutlet private weak var textLabel: UILabel!
     
-   
+    @IBOutlet weak var noButton: UIButton!
+    
+    
+    @IBOutlet weak var yesButton: UIButton!
     @IBAction private func yesButtonClicked(_ sender: UIButton) {
         let givenAnswer = true
         showAnswerResult(
