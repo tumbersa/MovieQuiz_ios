@@ -104,7 +104,8 @@ final class MovieQuizViewController: UIViewController {
             message: result.text,
             preferredStyle: .alert)
         // константа с кнопкой для системного алерта
-        let action = UIAlertAction(title: result.buttonText, style: .default) { [self] _ in
+        let action = UIAlertAction(title: result.buttonText, style: .default) { [weak self] _ in
+            guard let self else {return}
           // код, который сбрасывает игру и показывает первый вопрос
             currentQuestionIndex = 0
             correctAnswers = 0
@@ -128,9 +129,10 @@ final class MovieQuizViewController: UIViewController {
         yesButton.isEnabled = false
         noButton.isEnabled = false
         // запускаем задачу через 1 секунду c помощью диспетчера задач
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) { [weak self] in
+            guard let self else {return}
            // код, который мы хотим вызвать через 1 секунду
-           self.showNextQuestionOrResults()
+           showNextQuestionOrResults()
         }
     }
     // приватный метод, который содержит логику перехода в один из сценариев
