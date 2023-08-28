@@ -7,19 +7,6 @@
 
 import Foundation
 
-extension Double {
-    func decimalCount() -> Int {
-        if self == Double(Int(self)) {
-            return 0
-        }
-
-        let integerString = String(Int(self))
-        let doubleString = String(Double(self))
-        let decimalCount = doubleString.count - integerString.count - 1
-
-        return decimalCount
-    }
-}
 protocol StatisticService {
     func store(correct count: Int, total amount: Int)
     var totalAccuracy: Double { get }
@@ -35,17 +22,11 @@ struct GameRecord: Codable {
     }
 }
 final class StatisticServiceImplementation: StatisticService {
-    func reset() {
-        gamesCount = 0
-        bestGame = GameRecord(correct: 0, total: 0, date: Date())
-        totalAccuracy = 0.0
-    }
     func store(correct count: Int, total amount: Int) {
-        //reset()
         gamesCount = gamesCount + 1
         
-        let correct = userDefaults.integer(forKey: Keys.correct.rawValue) + count
-        let total = userDefaults.integer(forKey: Keys.total.rawValue) + amount
+        let correct: Int = userDefaults.integer(forKey: Keys.correct.rawValue) + count
+        let total: Int = userDefaults.integer(forKey: Keys.total.rawValue) + amount
         userDefaults.set(correct, forKey: Keys.correct.rawValue)
         userDefaults.set(total, forKey: Keys.total.rawValue)
         
@@ -65,22 +46,12 @@ final class StatisticServiceImplementation: StatisticService {
             let correct = Double(userDefaults.integer(forKey: Keys.correct.rawValue))
             let total = Double(userDefaults.integer(forKey: Keys.total.rawValue))
             if total != 0 {
-                return correct / total
+                return correct / total * 100
             }
             else {
                 return 0
             }
         }
-        set {
-            let total: Int = Int(pow(10, Double(newValue.decimalCount())))
-            let correct: Int = Int(newValue * Double(total))
-            userDefaults.set(correct, forKey: Keys.correct.rawValue)
-            if total != 1{
-                userDefaults.set(total, forKey: Keys.total.rawValue)
-            } else {
-                userDefaults.set(0, forKey: Keys.total.rawValue)
-            }
-            }
     }
     
     var gamesCount: Int {

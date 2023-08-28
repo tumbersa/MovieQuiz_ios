@@ -6,7 +6,7 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     var questionFactory: QuestionFactoryProtocol?
     private var currentQuestion: QuizQuestion?
     private var alertPresenter: AlertPresenter?
-    private let statisticService: StatisticService = StatisticServiceImplementation()
+    private var statisticService: StatisticService?
     
     // переменная с индексом текущего вопроса, начальное значение 0
     // (по этому индексу будем искать вопрос в массиве, где индекс первого элемента 0, а не 1)
@@ -56,12 +56,16 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     private func showNextQuestionOrResults() {
         if currentQuestionIndex == questionsAmount - 1 { // 1
             // идём в состояние "Результат квиза"
+            statisticService = StatisticServiceImplementation()
+            guard let statisticService else {
+                return
+            }
             statisticService.store(correct: correctAnswers, total: questionsAmount)
             
             let text = "Ваш результат \(correctAnswers)/\(questionsAmount)\n" +
             "Количество сыгранных квизов: \(statisticService.gamesCount)\n" +
             "Рекорд: \(statisticService.bestGame.correct)/\(statisticService.bestGame.total) (\(statisticService.bestGame.date.dateTimeString))\n" +
-            "Средняя точность: \(String(format: "%.2f", (statisticService.totalAccuracy / Double(statisticService.gamesCount)) * 100))%"
+            "Средняя точность: \(String(format: "%.2f", statisticService.totalAccuracy))%"
             let resultViewModel = QuizResultsViewModel(
                 title: "Этот раунд окончен!",
                 text: text,

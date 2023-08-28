@@ -13,7 +13,9 @@ class AlertPresenter{
     // приватный метод для показа результатов раунда квиза
     // принимает вью модель QuizResultsViewModel и ничего не возвращает
     func show(quiz result: QuizResultsViewModel) {
-        guard let controller else {return}
+        guard let controller else {
+            return
+        }
         let alertModel = AlertModel(
             title: result.title,
             message: result.text,
