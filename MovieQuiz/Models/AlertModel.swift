@@ -14,6 +14,6 @@ struct AlertModel {
     var message: String
     //текст для кнопки алерта
     var buttonText: String
-    //замыкание без параметров для действия по кнопке алерта
+    //замыкание для действия по кнопке алерта
     var completion: (_:MovieQuizViewController) -> Void
 }

@@ -18,7 +18,7 @@ class AlertPresenter{
             title: result.title,
             message: result.text,
             buttonText: result.buttonText,
-            completion: {_ in
+            completion: { _ in
             // код, который сбрасывает игру и показывает первый вопрос
             controller.currentQuestionIndex = 0
             controller.correctAnswers = 0
