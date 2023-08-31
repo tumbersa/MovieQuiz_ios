@@ -2,17 +2,18 @@ import UIKit
 
 
 final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
+    // MARK: - Private properties
     private let questionsAmount: Int = 10
-    var questionFactory: QuestionFactoryProtocol?
+    private var questionFactory: QuestionFactoryProtocol?
     private var currentQuestion: QuizQuestion?
-    private var alertPresenter: AlertPresenter?
-    private var statisticService: StatisticService?
+    private var alertPresenter: AlertPresenterProtocol?
+    private var statisticService: StatisticServiceProtocol?
     
     // переменная с индексом текущего вопроса, начальное значение 0
     // (по этому индексу будем искать вопрос в массиве, где индекс первого элемента 0, а не 1)
-    var currentQuestionIndex = 0
+    private var currentQuestionIndex = 0
     // переменная со счётчиком правильных ответов, начальное значение закономерно 0
-    var correctAnswers = 0
+    private var correctAnswers = 0
     
     // MARK: - Private functions
     // метод конвертации, который принимает моковый вопрос и возвращает вью модель для экрана вопроса
@@ -51,37 +52,67 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
             self.showNextQuestionOrResults()
         }
     }
+    // вызов алерта
+    func show(quiz result: QuizResultsViewModel) {
+        //TODO: - call alertPresenter
+        let alertModel = AlertModel(
+            title: result.title,
+            message: result.text,
+            buttonText: result.buttonText,
+            completion: { [weak self] in
+                self?.currentQuestionIndex = 0
+                self?.correctAnswers = 0
+                self?.questionFactory?.requestNextQuestion()
+            }
+        )
+        alertPresenter?.show(alertModel: alertModel)
+    }
+    private func makeResultMessage() -> String {
+        guard let statisticService else {
+            return ""
+        }
+        let currentGameResultLine = "Ваш результат \(correctAnswers)/\(questionsAmount)"
+        let totalPlaysCountLine = "Количество сыгранных квизов: \(statisticService.gamesCount)"
+        let bestGameInfoLine = "Рекорд: \(statisticService.bestGame.correct)/\(statisticService.bestGame.total) (\(statisticService.bestGame.date.dateTimeString))"
+        let accuracyLine = "Средняя точность: \(String(format: "%.2f", statisticService.totalAccuracy))%"
+        
+        let components = [currentGameResultLine,totalPlaysCountLine,bestGameInfoLine,accuracyLine]
+        let resultMessage = components.joined(separator: "\n")
+        return resultMessage
+    }
     // приватный метод, который содержит логику перехода в один из сценариев
-    // метод ничего не принимает и ничего не возвращает
     private func showNextQuestionOrResults() {
         if currentQuestionIndex == questionsAmount - 1 { // 1
             // идём в состояние "Результат квиза"
-            statisticService = StatisticServiceImplementation()
-            guard let statisticService else {
-                return
-            }
-            statisticService.store(correct: correctAnswers, total: questionsAmount)
+            statisticService?.store(correct: correctAnswers, total: questionsAmount)
             
-            let text = "Ваш результат \(correctAnswers)/\(questionsAmount)\n" +
-            "Количество сыгранных квизов: \(statisticService.gamesCount)\n" +
-            "Рекорд: \(statisticService.bestGame.correct)/\(statisticService.bestGame.total) (\(statisticService.bestGame.date.dateTimeString))\n" +
-            "Средняя точность: \(String(format: "%.2f", statisticService.totalAccuracy))%"
+            let text = makeResultMessage()
             let resultViewModel = QuizResultsViewModel(
                 title: "Этот раунд окончен!",
                 text: text,
                 buttonText: "Сыграть ещё раз")
-            alertPresenter = AlertPresenter()
-            alertPresenter?.controller = self
-            alertPresenter?.show(quiz: resultViewModel)
+            
+            show(quiz: resultViewModel)
         } else { // 2
             currentQuestionIndex += 1
-            // идём в состояние "Вопрос показан"
             questionFactory?.requestNextQuestion()
         }
         yesButton.isEnabled = true
         noButton.isEnabled = true
     }
     
+    // MARK: - QuestionFactoryDelegate
+    func didReceiveNextQuestion(question: QuizQuestion?) {
+        guard let question else {
+            return
+        }
+        currentQuestion = question
+        let viewModel = convert(model: question)
+        DispatchQueue.main.async { [weak self] in
+            self?.show(quiz: viewModel)
+        }
+    }
+    // MARK: - IB Outlets
     //картинка постера фильма
     @IBOutlet private weak var imageView: UIImageView!
     //счетчик вопросов
@@ -90,7 +121,6 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     @IBOutlet private weak var textLabel: UILabel!
     
     @IBOutlet weak var noButton: UIButton!
-    
     @IBOutlet weak var yesButton: UIButton!
     
     // MARK: - Actions
@@ -116,20 +146,10 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        alertPresenter = AlertPresenter(viewController: self)
         questionFactory = QuestionFactory(delegate: self)
+        statisticService = StatisticServiceImplementation()
         questionFactory?.requestNextQuestion()
-    }
-   
-    // MARK: - QuestionFactoryDelegate
-    func didReceiveNextQuestion(question: QuizQuestion?) {
-        guard let question else {
-            return
-        }
-        currentQuestion = question
-        let viewModel = convert(model: question)
-        DispatchQueue.main.async { [weak self] in
-            self?.show(quiz: viewModel)
-        }
     }
 }
 

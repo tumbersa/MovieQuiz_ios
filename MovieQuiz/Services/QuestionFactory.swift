@@ -7,7 +7,7 @@
 
 import Foundation
 
-class QuestionFactory: QuestionFactoryProtocol {
+final class QuestionFactory: QuestionFactoryProtocol {
     // массив вопросов
     private let questions: [QuizQuestion] = [
         QuizQuestion(

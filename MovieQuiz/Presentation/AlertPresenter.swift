@@ -7,26 +7,16 @@
 
 import UIKit
 
-class AlertPresenter{
-    weak var controller: MovieQuizViewController?
-   
-    // приватный метод для показа результатов раунда квиза
-    // принимает вью модель QuizResultsViewModel и ничего не возвращает
-    func show(quiz result: QuizResultsViewModel) {
-        guard let controller else {
-            return
-        }
-        let alertModel = AlertModel(
-            title: result.title,
-            message: result.text,
-            buttonText: result.buttonText,
-            completion: { _ in
-            // код, который сбрасывает игру и показывает первый вопрос
-            controller.currentQuestionIndex = 0
-            controller.correctAnswers = 0
-            controller.questionFactory?.requestNextQuestion()
-        })
-        
+protocol AlertPresenterProtocol {
+    func show(alertModel: AlertModel)
+}
+
+final class AlertPresenter: AlertPresenterProtocol{
+    private weak var viewController: UIViewController?
+    init(viewController: UIViewController? = nil) {
+        self.viewController = viewController
+    }
+    func show(alertModel: AlertModel) {
         let alert = UIAlertController(
             title: alertModel.title,
             message: alertModel.message,
@@ -34,8 +24,9 @@ class AlertPresenter{
         
         // константа с кнопкой для системного алерта
         let action = UIAlertAction(title: alertModel.buttonText, style: .default) {_ in
-            alertModel.completion(controller)}
+            alertModel.completion()
+        }
         alert.addAction(action)
-        controller.present(alert, animated: true, completion: nil)
+        viewController?.present(alert, animated: true)
     }
 }
