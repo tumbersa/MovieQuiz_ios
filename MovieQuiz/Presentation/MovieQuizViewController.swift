@@ -133,7 +133,6 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
             isCorrect: currentQuestion.correctAnswer == givenAnswer)
     }
     
-    
     @IBAction private func noButtonClicked(_ sender: UIButton) {
        let givenAnswer = false
         guard let currentQuestion else {
