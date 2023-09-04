@@ -32,11 +32,9 @@ struct MoviesLoader: MoviesLoading {
                     handler(.success(movies))
                 }
                 catch {
-                    print(error)
                     handler(.failure(error))
                 }
             case .failure(let error):
-                print(error)
                 handler(.failure(error))
             }
         }
