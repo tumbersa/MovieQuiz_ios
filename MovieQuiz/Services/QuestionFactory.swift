@@ -42,9 +42,22 @@ final class QuestionFactory: QuestionFactoryProtocol {
                 }
             
             
-            let rating = Float(movie.rating) ?? 0
-            let text = "Рейтинг этого фильма больше чем 8.1?"
-            let correctAnswer = rating > 8.1
+            let rating = Decimal(floatLiteral: Double(movie.rating) ?? 0)
+            var text = "Рейтинг этого фильма больше чем 8.1?"
+            var correctAnswer = rating > 8.1
+            
+            let coefficients:[Double] = [-0.1, 0.1]
+            let coefficient =  Decimal(floatLiteral:coefficients.randomElement() ?? 0)
+            
+            if [0,1].randomElement() ?? 0 == 0 {
+                text = "Рейтинг этого фильма больше чем \( rating + coefficient)?"
+                correctAnswer = rating > rating + coefficient
+            } else {
+                text = "Рейтинг этого фильма меньше чем \(rating + coefficient)?"
+                correctAnswer = rating < rating +  coefficient
+            }
+           
+            
             
             let question = QuizQuestion(image: imageData, text: text, correctAnswer: correctAnswer)
             DispatchQueue.main.async {[weak self] in
