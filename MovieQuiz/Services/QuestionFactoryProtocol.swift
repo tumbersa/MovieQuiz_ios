@@ -8,5 +8,7 @@
 import Foundation
 
 protocol QuestionFactoryProtocol {
+    func moviesIsEmpty() -> Bool
     func requestNextQuestion()
+    func loadData()
 }
