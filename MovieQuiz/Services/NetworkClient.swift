@@ -10,17 +10,13 @@ import Foundation
 /// Отвечает за загрузку данных по URL
 struct NetworkClient {
 
-    private enum NetworkError: Error {
-        case codeError
-    }
-    
     func fetch(url: URL, handler: @escaping (Result<Data, Error>) -> Void) {
         let request = URLRequest(url: url)
         
         let task = URLSession.shared.dataTask(with: request) { data, response, error in
             // Проверяем, пришла ли ошибка
-            if let error {
-                handler(.failure(error))
+            if error != nil {
+                handler(.failure(NetworkError.dataLoadError))
                 return
             }
             
@@ -30,9 +26,11 @@ struct NetworkClient {
                 handler(.failure(NetworkError.codeError))
                 return
             }
-            
             // Возвращаем данные
-            guard let data else { return }
+            guard let data else {
+                handler(.failure(NetworkError.dataLoadError))
+                return
+            }
             handler(.success(data))
         }
         
