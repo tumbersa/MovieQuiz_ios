@@ -9,6 +9,7 @@ import Foundation
 
 final class QuestionFactory: QuestionFactoryProtocol {
     private var movies: [MostPopularMovie] = []
+    private var errorMessage: String = ""
     private let moviesLoader: MoviesLoading
     private weak var delegate: QuestionFactoryDelegate?
     init(moviesLoader: MoviesLoading, delegate: QuestionFactoryDelegate) {
@@ -25,6 +26,7 @@ final class QuestionFactory: QuestionFactoryProtocol {
 
             guard let movie = movies[safe: index] else {
                 DispatchQueue.main.async {
+                    print(self.errorMessage)
                     self.delegate?.didFailToLoadData(with: NetworkError.keyAPIError)
                 }
                 return
@@ -67,7 +69,7 @@ final class QuestionFactory: QuestionFactoryProtocol {
         }
     }
     func loadData() {
-        moviesLoader.loadMovies{ [weak self] result in
+            moviesLoader.loadMovies{ [weak self] result in
             DispatchQueue.main.async {
                 guard let self else {
                     print("self")
@@ -75,8 +77,15 @@ final class QuestionFactory: QuestionFactoryProtocol {
                 }
                 switch result {
                 case .success(let mostPopularMovies):
-                    self.movies = mostPopularMovies.items
-                    self.delegate?.didLoadDataFromServer()
+                    self.errorMessage = mostPopularMovies.errorMessage
+                    if (self.errorMessage == ""){
+                        self.movies = mostPopularMovies.items
+                        self.delegate?.didLoadDataFromServer()
+                    } else {
+                        print(self.errorMessage)
+                        self.delegate?.didFailToLoadData(with: NetworkError.keyAPIError)
+                        
+                    }
                 case .failure(_):
                     self.delegate?.didFailToLoadData(with: NetworkError.dataLoadError)
                 }

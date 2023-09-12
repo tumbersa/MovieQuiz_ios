@@ -64,7 +64,15 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
                 
                 self.questionFactory?.loadData()
             case NetworkError.imageLoadError.localizedDescription:
-                self.questionFactory?.requestNextQuestion()
+                showLoadingIndicator()
+                imageView.image = nil
+                imageView.layer.masksToBounds = true
+                imageView.layer.borderWidth = 0
+                yesButton.isEnabled = false
+                noButton.isEnabled = false
+                DispatchQueue.main.asyncAfter(deadline: .now() + 5.0) {
+                    self.questionFactory?.requestNextQuestion()
+                }
             default:
                 fatalError(message)
             }
@@ -153,6 +161,9 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
         guard let question else {
             return
         }
+        yesButton.isEnabled = true
+        noButton.isEnabled = true
+        hideLoadingIndicator()
         currentQuestion = question
         let viewModel = convert(model: question)
         DispatchQueue.main.async { [weak self] in
@@ -193,6 +204,7 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+
         activityIndicator.hidesWhenStopped = true
         alertPresenter = AlertPresenter(viewController: self)
         questionFactory = QuestionFactory(moviesLoader: MoviesLoader(), delegate: self)
