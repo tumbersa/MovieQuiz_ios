@@ -44,7 +44,7 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
         switch message {
         case NetworkError.dataLoadError.localizedDescription,
             NetworkError.imageLoadError.localizedDescription:
-            alertMessage = "The Internet connection appears to be offline."
+            alertMessage = "Data load error"
         case  NetworkError.codeError.localizedDescription:
             alertMessage = "Code Error"
         case NetworkError.keyAPIError.localizedDescription:
@@ -54,16 +54,7 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
         }
         let alertError = AlertModel(title: "Ошибка", message: alertMessage, buttonText: "Попробуйте ещё раз") {[weak self] in
             guard let self else {return}
-            
-            switch message {
-            case NetworkError.dataLoadError.localizedDescription,
-                NetworkError.codeError.localizedDescription,
-                NetworkError.keyAPIError.localizedDescription:
-                self.currentQuestionIndex = 0
-                self.correctAnswers = 0
-                
-                self.questionFactory?.loadData()
-            case NetworkError.imageLoadError.localizedDescription:
+            if message == NetworkError.imageLoadError.localizedDescription {
                 showLoadingIndicator()
                 imageView.image = nil
                 imageView.layer.masksToBounds = true
@@ -73,8 +64,11 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
                 DispatchQueue.main.asyncAfter(deadline: .now() + 5.0) {
                     self.questionFactory?.requestNextQuestion()
                 }
-            default:
-                fatalError(message)
+            } else {
+                self.currentQuestionIndex = 0
+                self.correctAnswers = 0
+                
+                self.questionFactory?.loadData()
             }
         }
         alertPresenter?.show(alertModel: alertError)
