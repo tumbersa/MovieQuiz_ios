@@ -20,7 +20,6 @@ final class QuestionFactory: QuestionFactoryProtocol {
         return movies.isEmpty
     }
     func requestNextQuestion() {
-      //  DispatchQueue.global(qos: .userInitiated).async {[weak self] in
         DispatchQueue.global().async {[weak self] in
             guard let self else {return}
             let index = (0..<self.movies.count).randomElement() ?? 0
@@ -35,31 +34,14 @@ final class QuestionFactory: QuestionFactoryProtocol {
             
             var imageData = Data()
           
-                do {
-                    
-                    imageData = try Data(contentsOf: movie.resizedImageURL)
-//                    self.setImageFromStringrURL(url: movie.resizedImageURL) {[weak self] result in
-//                        DispatchQueue.main.async {
-//                            guard let self else {
-//                                print("self")
-//                                return
-//                            }
-//                            switch result {
-//                            case .success(let imageData2):
-//                               imageData = imageData2
-//                            case .failure(_):
-//                                self.delegate?.didFailToLoadData(with: NetworkError.imageLoadError)
-//                            }
-//                        }
-//
-//                    }
-                } catch {
-                    DispatchQueue.main.async {
-                        self.delegate?.didFailToLoadData(with: NetworkError.imageLoadError)
-                    }
-                    return
+            do {
+                imageData = try Data(contentsOf: movie.resizedImageURL)
+            } catch {
+                DispatchQueue.main.async {
+                    self.delegate?.didFailToLoadData(with: NetworkError.imageLoadError)
                 }
-//
+                return
+            }
             
             let rating = Decimal(floatLiteral: Double(movie.rating) ?? 0)
             var text = "Рейтинг этого фильма больше чем 8.1?"
@@ -94,43 +76,12 @@ final class QuestionFactory: QuestionFactoryProtocol {
                 }
                 switch result {
                 case .success(let mostPopularMovies):
-                 //   self.errorMessage = mostPopularMovies.errorMessage
-                   // if (self.errorMessage == ""){
                         self.movies = mostPopularMovies
                         self.delegate?.didLoadDataFromServer()
-                    //} else {
-                        //print(self.errorMessage)
-                       // self.delegate?.didFailToLoadData(with: NetworkError.keyAPIError)
-                        
-                    //}
                 case .failure(_):
                     self.delegate?.didFailToLoadData(with: NetworkError.dataLoadError)
                 }
             }
         }
     }
-//    func setImageFromStringrURL(url: URL, handler: @escaping (Result<Data, Error>) -> Void) {
-//        
-//        URLSession.shared.dataTask(with:  url) { (data, response, error) in
-//            if error != nil {
-//                handler(.failure(NetworkError.dataLoadError))
-//                return
-//            }
-//            
-//            // Проверяем, что нам пришёл успешный код ответа
-//            if let response = response as? HTTPURLResponse,
-//                response.statusCode < 200 || response.statusCode >= 300 {
-//                handler(.failure(NetworkError.codeError))
-//                return
-//            }
-//           
-//          guard let imageData = data else { return }
-//
-//        handler(.success(imageData))
-//        }.resume()
-//      
-//    }
-    
-        
-    
 }
