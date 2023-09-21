@@ -14,13 +14,10 @@ enum ApiType {
      case imdb,kp
 }
 
-
-
-
 class MoviesLoader: MoviesLoading {
     // MARK: - NetworkClient
     private let networkClient:NetworkRouting
-    private var apiType: ApiType = .imdb
+    private var apiType: ApiType = .kp
     
     private lazy var requestFactory: MoviesLoaderRequestFactoryProtocol = MoviesLoaderRequestFactoryImpl()
     

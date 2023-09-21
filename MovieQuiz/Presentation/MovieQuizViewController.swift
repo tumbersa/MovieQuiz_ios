@@ -22,6 +22,9 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     }
 
     func didFailToLoadData(with error: Error) {
+        if let error: NetworkError = error as? NetworkError {
+            showNetworkError(message: error.rawValue)
+        }
         showNetworkError(message: error.localizedDescription) // возьмём в качестве сообщения описание ошибки
         
     }
@@ -40,28 +43,18 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate {
     }
     private func showNetworkError(message: String) {
         hideLoadingIndicator() // скрываем индикатор загрузки
-        var alertMessage: String
-        switch message {
-        case NetworkError.dataLoadError.localizedDescription,
-            NetworkError.imageLoadError.localizedDescription:
-            alertMessage = "Data load error"
-        case  NetworkError.codeError.localizedDescription:
-            alertMessage = "Code Error"
-        case NetworkError.keyAPIError.localizedDescription:
-            alertMessage = "API key Error"
-        default:
-            alertMessage = message
-        }
+        let alertMessage: String = message
+
         let alertError = AlertModel(title: "Ошибка", message: alertMessage, buttonText: "Попробуйте ещё раз") {[weak self] in
             guard let self else {return}
-            if message == NetworkError.imageLoadError.localizedDescription {
+            if message == NetworkError.imageLoadError.rawValue {
                 showLoadingIndicator()
                 imageView.image = nil
                 imageView.layer.masksToBounds = true
                 imageView.layer.borderWidth = 0
                 yesButton.isEnabled = false
                 noButton.isEnabled = false
-                DispatchQueue.main.asyncAfter(deadline: .now() + 5.0) {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
                     self.questionFactory?.requestNextQuestion()
                 }
             } else {

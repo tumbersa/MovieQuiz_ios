@@ -25,7 +25,7 @@ class MoviesLoaderRequestFactoryImpl: MoviesLoaderRequestFactoryProtocol {
             var components = URLComponents(string: "https://api.kinopoisk.dev/v1.3/movie")!
             components.queryItems = [
                 URLQueryItem(name: "selectFields", value: ["id","name","rating","poster"].joined(separator: " ")),
-                URLQueryItem(name: "limit", value: "10"),
+                URLQueryItem(name: "limit", value: "250"),
                 URLQueryItem(name: "typeNumber", value: "1"),
                 URLQueryItem(name: "top250", value: "!null")
             ]

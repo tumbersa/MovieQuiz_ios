@@ -28,11 +28,17 @@ struct KPMovie: Codable, Movie {
     }
     
     var imageURL: URL {
-        URL(string: poster.previewUrl)!
+        guard let imageUrl = URL(string: poster.previewUrl) else {
+            fatalError("imageUrl")
+        }
+        return imageUrl
     }
     
     var resizedImageURL: URL {
-        URL(string: poster.previewUrl)!
+        guard let imageUrl = URL(string: poster.previewUrl) else {
+            fatalError("resizedUrl")
+        }
+        return imageUrl
     }
     
    
