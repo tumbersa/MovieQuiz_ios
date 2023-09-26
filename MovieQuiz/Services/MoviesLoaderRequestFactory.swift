@@ -1,10 +1,3 @@
-//
-//  MoviesLoaderRequestFactory.swift
-//  MovieQuiz
-//
-//  Created by Глеб Капустин on 20.09.2023.
-//
-
 import Foundation
 
 protocol MoviesLoaderRequestFactoryProtocol {

@@ -1,7 +1,7 @@
 {
   "configurations" : [
     {
-      "id" : "2EEF1811-EFE3-425E-86CB-37D2D57164F3",
+      "id" : "E826827B-B5A8-48BE-8302-FE3C5DC24451",
       "name" : "Test Scheme Action",
       "options" : {
 
@@ -9,12 +9,7 @@
     }
   ],
   "defaultOptions" : {
-    "codeCoverage" : false,
-    "targetForVariableExpansion" : {
-      "containerPath" : "container:MovieQuiz.xcodeproj",
-      "identifier" : "AD1ABAAD2831907B00B3E448",
-      "name" : "MovieQuiz"
-    }
+    "codeCoverage" : false
   },
   "testTargets" : [
     {

@@ -1,10 +1,3 @@
-//
-//  AlertModel.swift
-//  MovieQuiz
-//
-//  Created by Глеб Капустин on 22.08.2023.
-//
-
 import Foundation
 
 struct AlertModel {
@@ -14,6 +7,8 @@ struct AlertModel {
     var message: String
     //текст для кнопки алерта
     var buttonText: String
+    //индентификатор
+    var identifier: String
     //замыкание для действия по кнопке алерта
     var completion: () -> Void
 }

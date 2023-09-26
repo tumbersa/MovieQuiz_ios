@@ -1,10 +1,3 @@
-//
-//  KPMovies.swift
-//  MovieQuiz
-//
-//  Created by Глеб Капустин on 18.09.2023.
-//
-
 import Foundation
 
 struct KPMovieResponce: Codable {

@@ -1,10 +1,3 @@
-//
-//  AlertPresenter.swift
-//  MovieQuiz
-//
-//  Created by Глеб Капустин on 22.08.2023.
-//
-
 import UIKit
 
 protocol AlertPresenterProtocol {
@@ -26,6 +19,7 @@ final class AlertPresenter: AlertPresenterProtocol{
         let action = UIAlertAction(title: alertModel.buttonText, style: .default) {_ in
             alertModel.completion()
         }
+        alert.view.accessibilityIdentifier = alertModel.identifier
         alert.addAction(action)
         viewController?.present(alert, animated: true)
     }

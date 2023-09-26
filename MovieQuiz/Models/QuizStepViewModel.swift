@@ -1,10 +1,3 @@
-//
-//  QuizStepViewModel.swift
-//  MovieQuiz
-//
-//  Created by Глеб Капустин on 21.08.2023.
-//
-
 import UIKit
 
 // вью модель для состояния "Вопрос показан"
