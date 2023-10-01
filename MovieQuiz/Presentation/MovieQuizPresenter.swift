@@ -44,7 +44,7 @@ final class MovieQuizPresenter: QuestionFactoryDelegate {
             correctAnswers += 1
         }
          viewController?.highlightImageBorder(isCorrect: isCorrect)
-         viewController?.enableButtons(isYes: false)
+         viewController?.buttonsState(isEnabled: false)
         // запускаем задачу через 1 секунду c помощью диспетчера задач
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) { [weak self] in
             guard let self else {return}
@@ -91,7 +91,7 @@ final class MovieQuizPresenter: QuestionFactoryDelegate {
            currentQuestionIndex += 1
            questionFactory?.requestNextQuestion()
        }
-        viewController?.enableButtons(isYes: true)
+        viewController?.buttonsState(isEnabled: true)
    }
    
     func convert(model: QuizQuestion) -> QuizStepViewModel {
@@ -118,7 +118,7 @@ final class MovieQuizPresenter: QuestionFactoryDelegate {
         guard let question else {
             return
         }
-        viewController?.enableButtons(isYes: true)
+        viewController?.buttonsState(isEnabled: true)
         viewController?.hideLoadingIndicator()
         currentQuestion = question
         let viewModel = convert(model: question)

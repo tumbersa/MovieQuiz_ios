@@ -7,7 +7,7 @@ protocol MovieQuizViewControllerProtocol: AnyObject {
     func highlightImageBorder(isCorrect: Bool)
     func showLoadingIndicator()
     func hideLoadingIndicator()
-    func enableButtons(isYes: Bool)
+    func buttonsState(isEnabled: Bool)
     
     func showNetworkError(message: String)
 }
@@ -31,17 +31,14 @@ final class MovieQuizViewController: UIViewController, MovieQuizViewControllerPr
         hideLoadingIndicator()
         let alertMessage: String = message
 
-        let alertError = AlertModel(title: "Ошибка", message: alertMessage, buttonText: "Попробуйте ещё раз",identifier: "Error alert") {[weak self] in
+        let alertError = AlertModel(
+            title: "Ошибка",
+            message: alertMessage,
+            buttonText: "Попробуйте ещё раз",
+            identifier: "Error alert") { [weak self] in
             guard let self else {return}
             if message == NetworkError.imageLoadError.rawValue {
-                showLoadingIndicator()
-                imageView.image = nil
-                imageView.layer.masksToBounds = true
-                imageView.layer.borderWidth = 0
-                enableButtons(isYes: false)
-                DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-                    self.presenter?.imageLoadError()
-                }
+                self.imageLoadErrorHandler()
             } else {
                 self.presenter?.restartGame()
             }
@@ -80,8 +77,8 @@ final class MovieQuizViewController: UIViewController, MovieQuizViewControllerPr
         alertPresenter?.show(alertModel: alertModel)
     }
      
-    func enableButtons(isYes: Bool){
-        if isYes {
+    func buttonsState(isEnabled: Bool){
+        if isEnabled {
             yesButton.isEnabled = true
             noButton.isEnabled = true
         }
@@ -91,6 +88,16 @@ final class MovieQuizViewController: UIViewController, MovieQuizViewControllerPr
         }
     }
     
+    private func imageLoadErrorHandler(){
+        showLoadingIndicator()
+        imageView.image = nil
+        imageView.layer.masksToBounds = true
+        imageView.layer.borderWidth = 0
+        buttonsState(isEnabled: false)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+            self.presenter?.imageLoadError()
+        }
+    }
     // MARK: - IB Outlets
     @IBOutlet private weak var imageView: UIImageView!
     @IBOutlet private weak var counterLabel: UILabel!
