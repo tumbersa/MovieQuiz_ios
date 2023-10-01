@@ -1,10 +1,3 @@
-//
-//  MoviesLoader.swift
-//  MovieQuiz
-//
-//  Created by Глеб Капустин on 01.09.2023.
-//
-
 import Foundation
 
 protocol MoviesLoading {
@@ -13,9 +6,6 @@ protocol MoviesLoading {
 enum ApiType {
      case imdb,kp
 }
-
-
-
 
 class MoviesLoader: MoviesLoading {
     // MARK: - NetworkClient
@@ -29,14 +19,6 @@ class MoviesLoader: MoviesLoading {
         self.networkClient = networkClient
     }
     
-    // MARK: - URL
-        private var mostPopularMoviesUrl: URL {
-            guard let url = URL(string: "https://imdb-api.com/en/API/Top250Movies/k_zcuw1ytf") else {
-                fatalError("")
-            }
-            return url
-            
-        }
     func loadMovies(handler: @escaping (Result<[Movie], Error>) -> Void) {
         switch requestFactory.constructRequest(apiType: apiType) {
         case .success(let request):

@@ -1,10 +1,3 @@
-//
-//  StatisticService.swift
-//  MovieQuiz
-//
-//  Created by Глеб Капустин on 26.08.2023.
-//
-
 import Foundation
 
 final class StatisticServiceImplementation: StatisticServiceProtocol {
@@ -65,7 +58,7 @@ final class StatisticServiceImplementation: StatisticServiceProtocol {
         }
     }
     
-    func store(correct count: Int, total amount: Int) {
+    func storeAnswersAndImmediatelyUpdateTotalAccuracy(correct count: Int, total amount: Int) {
         gamesCount = gamesCount + 1
         
         let correct: Int = userDefaults.integer(forKey: Keys.correct.rawValue) + count

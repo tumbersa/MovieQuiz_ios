@@ -1,10 +1,3 @@
-//
-//  GameRecord.swift
-//  MovieQuiz
-//
-//  Created by Глеб Капустин on 31.08.2023.
-//
-
 import Foundation
 
 struct GameRecord: Codable {

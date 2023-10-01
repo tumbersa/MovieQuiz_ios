@@ -1,10 +1,3 @@
-//
-//  QuestionFactory.swift
-//  MovieQuiz
-//
-//  Created by Глеб Капустин on 21.08.2023.
-//
-
 import Foundation
 
 final class QuestionFactory: QuestionFactoryProtocol {
@@ -12,13 +5,13 @@ final class QuestionFactory: QuestionFactoryProtocol {
     private var errorMessage: String = ""
     private let moviesLoader: MoviesLoading
     private weak var delegate: QuestionFactoryDelegate?
+    
     init(moviesLoader: MoviesLoading, delegate: QuestionFactoryDelegate) {
         self.moviesLoader = moviesLoader
         self.delegate = delegate
     }
-    func moviesIsEmpty() -> Bool {
-        return movies.isEmpty
-    }
+    
+    //MARK: -functions
     func requestNextQuestion() {
         DispatchQueue.global().async {[weak self] in
             guard let self else {return}
@@ -26,7 +19,7 @@ final class QuestionFactory: QuestionFactoryProtocol {
 
             guard let movie = movies[safe: index] else {
                 DispatchQueue.main.async {
-                    print(self.errorMessage)
+                  print(self.errorMessage)
                     self.delegate?.didFailToLoadData(with: NetworkError.keyAPIError)
                 }
                 return
@@ -67,6 +60,7 @@ final class QuestionFactory: QuestionFactoryProtocol {
             }
         }
     }
+    
     func loadData() {
             moviesLoader.loadMovies{ [weak self] result in
             DispatchQueue.main.async {
@@ -84,4 +78,5 @@ final class QuestionFactory: QuestionFactoryProtocol {
             }
         }
     }
+    
 }
